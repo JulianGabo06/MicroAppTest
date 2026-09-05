@@ -1,0 +1,29 @@
+{
+  "name": "catalog",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "react-native start --port 9001",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@microapps/shared": "*",
+    "@module-federation/enhanced": "2.5.0",
+    "react": "19.2.3",
+    "react-native": "0.85.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@callstack/repack": "5.2.5",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native-community/cli-platform-android": "20.2.0",
+    "@react-native-community/cli-platform-ios": "20.2.0",
+    "@react-native/babel-preset": "0.85.3",
+    "@rspack/core": "^1.4.11",
+    "@swc/core": "^1.11.24",
+    "@swc/helpers": "0.5.17",
+    "@types/react": "~19.2.2",
+    "typescript": "~5.9.2"
+  }
+}

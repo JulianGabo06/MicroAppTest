@@ -1,0 +1,40 @@
+{
+  "name": "microapps",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Demo de micro apps móviles con Expo + Re.Pack (Module Federation) + Floci (S3 local)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "postinstall": "node -e \"try{require('@swc/core');console.log('✓ @swc/core OK')}catch(e){console.warn('⚠ @swc/core: corre npm approve-scripts @swc/core si el build de Re.Pack falla')}\"",
+    "start": "npm run start:all",
+    "start:all": "npx concurrently -n host,catalog,profile -c blue,green,magenta \"npm run start -w host\" \"npm run start -w catalog\" \"npm run start -w profile\"",
+    "start:host": "npm run start -w host",
+    "start:catalog": "npm run start -w catalog",
+    "start:profile": "npm run start -w profile",
+    "prebuild": "npm run prebuild -w host && node scripts/patch-native.js",
+    "patch:native": "node scripts/patch-native.js",
+    "android": "npm run android -w host",
+    "ios": "npm run ios -w host",
+    "typecheck": "npm run typecheck -w host && npm run typecheck -w catalog && npm run typecheck -w profile",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:ui": "node infra/scripts/setup-floci-ui.js",
+    "s3:create-bucket": "node infra/scripts/create-bucket.js",
+    "s3:upload-demo": "node infra/scripts/upload-demo.js"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "npm@11.16.0",
+  "allowScripts": {
+    "@swc/core@1.11.24": true
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "MicroApps Host",
+    "slug": "microapps-host",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0F172A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.microapps.host"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundColor": "#0F172A"
+      },
+      "package": "com.microapps.host"
+    },
+    "plugins": [
+      "./plugins/withRepackEntry.js"
+    ]
+  }
+}

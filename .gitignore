@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Expo (mantener el entry de compat documentado)
+.expo/
+!apps/host/.expo/
+!apps/host/.expo/.virtual-metro-entry.js
+
+# Native (se regeneran con `npm run prebuild`; el plugin withRepackEntry los parchea)
+**/android/
+**/ios/
+
+# Build / bundles
+dist/
+build/
+*.jsbundle
+*.hbc
+*.apk
+*.ipa
+*.tsbuildinfo
+
+# Env / IDE local
+.env
+.env.local
+.idea/
+*.log
+.DS_Store
+
+# Infra runtime data (Floci persistence) y clone opcional
+infra/floci-ui/
+infra/data/*
+!infra/data/.gitkeep
+
+# Local agent settings
+.claude/
+**/.claude/

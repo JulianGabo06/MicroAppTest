@@ -1,0 +1,42 @@
+{
+  "name": "host",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "react-native start --port 8081",
+    "android": "expo run:android --no-bundler",
+    "ios": "expo run:ios --no-bundler",
+    "prebuild": "expo prebuild",
+    "typecheck": "tsc --noEmit",
+    "bundle:android": "react-native bundle --platform android --dev false --entry-file index.js",
+    "bundle:ios": "react-native bundle --platform ios --dev false --entry-file index.js"
+  },
+  "dependencies": {
+    "@microapps/shared": "*",
+    "@module-federation/enhanced": "2.5.0",
+    "@react-navigation/native": "7.1.14",
+    "@react-navigation/native-stack": "7.3.21",
+    "expo": "~56.0.3",
+    "expo-constants": "~56.0.0",
+    "expo-status-bar": "~56.0.4",
+    "react": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@callstack/repack": "5.2.5",
+    "@callstack/repack-plugin-expo-modules": "5.2.5",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native-community/cli-platform-android": "20.2.0",
+    "@react-native-community/cli-platform-ios": "20.2.0",
+    "@react-native/babel-preset": "0.85.3",
+    "@rspack/core": "^1.4.11",
+    "@swc/core": "^1.11.24",
+    "@swc/helpers": "0.5.17",
+    "@types/react": "~19.2.2",
+    "typescript": "~5.9.2"
+  }
+}

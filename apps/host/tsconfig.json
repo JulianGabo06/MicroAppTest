@@ -1,0 +1,14 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "types": ["react", "react-native"],
+    "composite": true
+  },
+  "include": ["**/*.ts", "**/*.tsx", "mf-modules.d.ts"],
+  "exclude": ["node_modules", "android", "ios", "build"]
+}

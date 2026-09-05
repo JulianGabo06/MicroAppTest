@@ -1,0 +1,23 @@
+# Local AWS-compatible stack for micro app bundles (S3 simulation)
+#
+# Uso:
+#   docker compose up -d
+#   npm run s3:create-bucket
+
+services:
+  floci:
+    image: floci/floci:latest
+    container_name: microapps-floci
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./infra/data:/app/data
+    environment:
+      FLOCI_STORAGE_MODE: persistent
+      FLOCI_DEFAULT_REGION: us-east-1
+    networks:
+      - microapps
+
+networks:
+  microapps:
+    name: microapps_net
