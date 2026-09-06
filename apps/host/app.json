@@ -24,6 +24,11 @@
     },
     "plugins": [
       "./plugins/withRepackEntry.js"
-    ]
+    ],
+    "extra": {
+      "role": "host",
+      "federationName": "host",
+      "devPort": 8081
+    }
   }
 }

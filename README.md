@@ -2,7 +2,7 @@
 
 Monorepo de **microfrontends móviles** con:
 
-- **Expo** (host / shell nativo)
+- **Expo** (host + remotes alineados)
 - **Re.Pack** + **Module Federation** (mini apps en runtime)
 - **Floci** en Docker (S3 local para practicar DevOps)
 
@@ -34,8 +34,9 @@ Host (:8081) ──► [Catálogo] → catalog (:9001)
 ## Clone y arranque (otra persona)
 
 ```bash
-git clone <url-del-repo> MicroApps
-cd MicroApps
+git clone git@github.com:JulianGabo06/MicroAppTest.git
+cd MicroAppTest
+git checkout develop   # rama de trabajo
 
 # 1) deps + docker + bucket S3 (si Docker está disponible)
 npm run setup
@@ -79,22 +80,32 @@ adb reverse tcp:9002 tcp:9002
 ```text
 MicroApps/
 ├── apps/
-│   ├── host/                 # Shell Expo + Re.Pack + navegación
+│   ├── host/                 # Shell Expo + Re.Pack (ÚNICO binario nativo)
 │   │   ├── plugins/          # withRepackEntry (prebuild)
 │   │   ├── rspack.config.mjs
 │   │   └── src/
-│   ├── catalog/              # Mini app remota (puerto 9001)
-│   └── profile/              # Mini app remota (puerto 9002)
+│   ├── catalog/              # Remote Expo+Re.Pack (solo JS, :9001)
+│   └── profile/              # Remote Expo+Re.Pack (solo JS, :9002)
 ├── packages/shared/          # getSharedDependencies() para MF
 ├── scripts/
 │   ├── setup.js              # post-clone
-│   └── patch-native.js       # re-aplica entry + Gradle SSL
+│   └── patch-native.js       # re-parche entry + Gradle SSL
 ├── infra/scripts/            # S3 / floci-ui helpers
-├── docs/                     # Notas de estudio (no borrar)
+├── docs/                     # Notas de estudio
 ├── docker-compose.yml
 ├── package.json              # npm workspaces
 └── README.md
 ```
+
+### Roles (importante)
+
+| App | Expo | Nativo (`android`/`ios`) | Rol |
+|-----|------|---------------------------|-----|
+| `host` | Sí | Sí (`expo prebuild`) | Shell: navegación + carga remotes |
+| `catalog` | Sí (`app.json` + deps + plugin) | **No** | Remote MF: solo bundle JS |
+| `profile` | Sí (`app.json` + deps + plugin) | **No** | Remote MF: solo bundle JS |
+
+Las mini apps **no** se abren con Expo Go ni con `expo run:*`. Viven dentro del host. Alinean versión de `expo` / `react` / `react-native` y usan `@callstack/repack-plugin-expo-modules`.
 
 ---
 
@@ -110,7 +121,7 @@ MicroApps/
 | `npm run docker:up` | Solo Floci |
 | `npm run docker:ui` | Clona floci-ui (consola web) |
 | `npm run s3:create-bucket` | Crea `microapps-bundles` |
-| `npm run patch:native` | Reaplicaa nativo si regeneraste `android/`/`ios/` |
+| `npm run patch:native` | Reaplica nativo si regeneraste `android/`/`ios/` |
 
 ---
 

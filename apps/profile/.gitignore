@@ -1,0 +1,12 @@
+# Remote Expo app — no se genera android/ios propio.
+# El host provee el runtime nativo; esta app solo publica JS vía Re.Pack.
+
+node_modules/
+.expo/
+dist/
+build/
+*.jsbundle
+*.tsbuildinfo
+.DS_Store
+*.log
+.env*.local

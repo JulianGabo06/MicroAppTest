@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "MicroApps Catalog",
+    "slug": "microapps-catalog",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "com.microapps.catalog"
+    },
+    "android": {
+      "package": "com.microapps.catalog"
+    },
+    "extra": {
+      "role": "remote",
+      "federationName": "catalog",
+      "devPort": 9001
+    }
+  }
+}

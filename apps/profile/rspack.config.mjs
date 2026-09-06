@@ -2,14 +2,16 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as Repack from '@callstack/repack';
+import { ExpoModulesPlugin } from '@callstack/repack-plugin-expo-modules';
 
 const require = createRequire(import.meta.url);
 const { getSharedDependencies } = require('@microapps/shared');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
- * Mini app Profile — solo expone ./App.
- * No registra AppRegistry: el host la monta en runtime.
+ * Mini app Profile (Expo + Re.Pack remote).
+ * Solo JS: no tiene binario nativo propio; el host provee el runtime nativo.
+ * Expone ./App vía Module Federation.
  */
 export default Repack.defineRspackConfig(({ mode, platform }) => {
   return {
@@ -19,6 +21,7 @@ export default Repack.defineRspackConfig(({ mode, platform }) => {
     resolve: {
       ...Repack.getResolveOptions({ enablePackageExports: true }),
       modules: [
+        path.resolve(__dirname, '../../node_modules'),
         path.resolve(__dirname, '../host/node_modules'),
         'node_modules',
       ],
@@ -50,6 +53,7 @@ export default Repack.defineRspackConfig(({ mode, platform }) => {
           },
         ],
       }),
+      new ExpoModulesPlugin(),
       new Repack.plugins.ModuleFederationPluginV2({
         name: 'profile',
         filename: 'profile.container.js.bundle',
