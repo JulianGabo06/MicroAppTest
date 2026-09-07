@@ -165,7 +165,12 @@ cd infra/floci-ui && docker compose up
 
 ## Notas de estudio
 
-Las guías paso a paso viven en [`docs/`](docs/) (conceptos, Re.Pack, Docker). Úsalas para entender el “por qué”; este README es el contrato para clonar y correr.
+- [`docs/04-guia-explicativa.md`](docs/04-guia-explicativa.md) — **relato para explicar el proyecto** + fuentes de estudio  
+- [`docs/01-conceptos.md`](docs/01-conceptos.md) — problema y mapa mental  
+- [`docs/02-repack.md`](docs/02-repack.md) — Re.Pack / Module Federation  
+- [`docs/03-docker-floci.md`](docs/03-docker-floci.md) — S3 local con Floci  
+
+Este README es el contrato para clonar y correr.
 
 ---
 
