@@ -165,7 +165,8 @@ cd infra/floci-ui && docker compose up
 
 ## Notas de estudio
 
-- [`docs/04-guia-explicativa.md`](docs/04-guia-explicativa.md) — **relato para explicar el proyecto** + fuentes de estudio  
+- [`docs/04-guia-explicativa.md`](docs/04-guia-explicativa.md) — relato para explicar + fuentes  
+- [`docs/05-guia-tecnica-codigo.md`](docs/05-guia-tecnica-codigo.md) — **paso a paso técnico con código**  
 - [`docs/01-conceptos.md`](docs/01-conceptos.md) — problema y mapa mental  
 - [`docs/02-repack.md`](docs/02-repack.md) — Re.Pack / Module Federation  
 - [`docs/03-docker-floci.md`](docs/03-docker-floci.md) — S3 local con Floci  

@@ -254,4 +254,7 @@ Debes ver `exposes` con `App`.
 
 ---
 
-Listo para explicar el proyecto de punta a punta. Para el “cómo se configura archivo por archivo”, sigue con `docs/02-repack.md` y `docs/03-docker-floci.md`.
+Listo para explicar el proyecto de punta a punta.  
+- Relato / pitch: este documento (`04`).  
+- Código archivo por archivo: [`05-guia-tecnica-codigo.md`](./05-guia-tecnica-codigo.md).  
+- Config Re.Pack / Docker: `docs/02-repack.md` y `docs/03-docker-floci.md`.
