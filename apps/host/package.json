@@ -9,6 +9,9 @@
     "ios": "expo run:ios --no-bundler",
     "prebuild": "expo prebuild",
     "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "bundle:android": "react-native bundle --platform android --dev false --entry-file index.js",
     "bundle:ios": "react-native bundle --platform ios --dev false --entry-file index.js"
   },

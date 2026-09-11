@@ -2,8 +2,8 @@
  * Verifica (y re-aplica si hace falta) los cambios nativos que Re.Pack necesita
  * después de `expo prebuild`. Seguro de correr varias veces.
  */
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const hostRoot = path.join(__dirname, '..', 'apps', 'host');
 
@@ -79,7 +79,11 @@ function findAppDelegate() {
       const full = path.join(dir, name);
       const stat = fs.statSync(full);
       if (stat.isDirectory() && name !== 'Pods' && name !== 'build') stack.push(full);
-      else if (name === 'AppDelegate.swift' || name === 'AppDelegate.mm' || name === 'AppDelegate.m') {
+      else if (
+        name === 'AppDelegate.swift' ||
+        name === 'AppDelegate.mm' ||
+        name === 'AppDelegate.m'
+      ) {
         return full;
       }
     }

@@ -30,7 +30,9 @@ Workspaces en la raíz:
   "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "start": "npm run start:all",
-    "start:all": "npx concurrently -n host,catalog,profile -c blue,green,magenta \"npm run start -w host\" \"npm run start -w catalog\" \"npm run start -w profile\"",
+    "start:all": "npx concurrently -n host,catalog,profile -c blue,green,magenta \"npm run start -w host\" \"npm run start:catalog\" \"npm run start:profile\"",
+    "start:catalog": "npm --prefix ../microapp-catalog start",
+    "start:profile": "npm --prefix ../microapp-profile start",
     "prebuild": "npm run prebuild -w host && node scripts/patch-native.js",
     "android": "npm run android -w host"
   }
@@ -247,7 +249,7 @@ Flujo en runtime:
 ### 5.1 Entry vacío (sin AppRegistry)
 
 ```js
-// apps/catalog/index.js
+// ../microapp-catalog/index.js
 // Remote entry: no AppRegistry.
 // El host (Expo) importa catalog/App vía Module Federation.
 export {};
@@ -258,7 +260,7 @@ El remote **no** se registra como app raíz: solo espera ser importado.
 ### 5.2 UI expuesta
 
 ```tsx
-// apps/catalog/src/App.tsx
+// ../microapp-catalog/src/App.tsx
 export default function CatalogApp() {
   return (
     <View>
@@ -272,7 +274,7 @@ export default function CatalogApp() {
 ### 5.3 `rspack.config.mjs` del remote
 
 ```js
-// apps/catalog/rspack.config.mjs (resumen)
+// ../microapp-catalog/rspack.config.mjs (resumen)
 new Repack.plugins.ModuleFederationPluginV2({
   name: 'catalog',
   filename: 'catalog.container.js.bundle',
@@ -391,6 +393,8 @@ Hoy los `remotes` apuntan a **localhost**. El siguiente paso productivo es cambi
 catalog: `catalog@http://localhost:4566/microapps-bundles/catalog/${platform}/mf-manifest.json`
 ```
 
+Para agregar otra micro app desde un **repo nuevo** (contrato + checklist en el host): [`06-agregar-microapp-repo.md`](./06-agregar-microapp-repo.md).
+
 (ajustando el path público según cómo Floci sirva objetos).
 
 ---
@@ -457,8 +461,8 @@ Esperado: JSON con `exposes` → `App`.
 |---------|-----------------|
 | `apps/*/react-native.config.js` | Activa Re.Pack |
 | `apps/host/rspack.config.mjs` | Remotes + shared eager |
-| `apps/catalog/rspack.config.mjs` | `exposes: ./App` |
-| `apps/profile/rspack.config.mjs` | `exposes: ./App` |
+| `../microapp-catalog/rspack.config.mjs` | `exposes: ./App` |
+| `../microapp-profile/rspack.config.mjs` | `exposes: ./App` |
 | `packages/shared/src/index.js` | Contrato shared |
 | `apps/host/src/screens/RemoteScreen.tsx` | `lazy(() => import(...))` |
 | `apps/host/mf-modules.d.ts` | Tipos Federation |

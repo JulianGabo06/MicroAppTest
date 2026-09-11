@@ -42,8 +42,8 @@ Host (Expo + Re.Pack)     ← único APK/IPA
 | Pieza | Carpeta | Qué es |
 |--------|---------|--------|
 | Host / shell | `apps/host` | App Expo que el usuario instala. Navegación + 2 botones. |
-| Micro app Catálogo | `apps/catalog` | Remote Module Federation. Lista de productos. |
-| Micro app Perfil | `apps/profile` | Remote Module Federation. Pantalla de perfil. |
+| Micro app Catálogo | repo hermano `microapp-catalog` | Remote Module Federation. Lista de productos. |
+| Micro app Perfil | repo hermano `microapp-profile` | Remote Module Federation. Pantalla de perfil. |
 | Shared MF | `packages/shared` | `getSharedDependencies()` (react / react-native singleton). |
 | S3 local | `docker-compose.yml` + `infra/scripts` | Floci emula AWS S3. |
 | Docs estudio | `docs/01`–`03` | Conceptos, Re.Pack, Docker. |
@@ -179,7 +179,7 @@ Debes ver `exposes` con `App`.
 2. Cambiar `remotes` del host de localhost → URLs S3.  
 3. `ScriptManager` con resolver de producción (versión / fallback offline).  
 4. CI que buildee cada mini app por separado.  
-5. (Opcional) más remotes o contratos tipados entre host y mini apps.
+5. Más remotes desde repos externos: [`06-agregar-microapp-repo.md`](./06-agregar-microapp-repo.md).
 
 ---
 

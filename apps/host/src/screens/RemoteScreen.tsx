@@ -1,10 +1,5 @@
 import { lazy, Suspense } from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 type RemoteName = 'catalog' | 'profile';
 

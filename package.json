@@ -2,7 +2,7 @@
   "name": "microapps",
   "private": true,
   "version": "1.0.0",
-  "description": "Demo de micro apps móviles con Expo + Re.Pack (Module Federation) + Floci (S3 local)",
+  "description": "Host/base de microfrontends móviles con Expo + Re.Pack + Floci. Las mini apps viven en repos hermanos.",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -11,15 +11,18 @@
     "setup": "node scripts/setup.js",
     "postinstall": "node -e \"try{require('@swc/core');console.log('✓ @swc/core OK')}catch(e){console.warn('⚠ @swc/core: corre npm approve-scripts @swc/core si el build de Re.Pack falla')}\"",
     "start": "npm run start:all",
-    "start:all": "npx concurrently -n host,catalog,profile -c blue,green,magenta \"npm run start -w host\" \"npm run start -w catalog\" \"npm run start -w profile\"",
+    "start:all": "npx concurrently -n host,catalog,profile -c blue,green,magenta \"npm run start -w host\" \"npm run start:catalog\" \"npm run start:profile\"",
     "start:host": "npm run start -w host",
-    "start:catalog": "npm run start -w catalog",
-    "start:profile": "npm run start -w profile",
+    "start:catalog": "npm --prefix ../microapp-catalog start",
+    "start:profile": "npm --prefix ../microapp-profile start",
     "prebuild": "npm run prebuild -w host && node scripts/patch-native.js",
     "patch:native": "node scripts/patch-native.js",
     "android": "npm run android -w host",
     "ios": "npm run ios -w host",
-    "typecheck": "npm run typecheck -w host && npm run typecheck -w catalog && npm run typecheck -w profile",
+    "typecheck": "npm run typecheck -w host",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
@@ -28,6 +31,7 @@
     "s3:upload-demo": "node infra/scripts/upload-demo.js"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.11",
     "concurrently": "^9.1.2"
   },
   "engines": {

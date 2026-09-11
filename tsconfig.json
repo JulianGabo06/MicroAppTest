@@ -1,8 +1,4 @@
 {
   "files": [],
-  "references": [
-    { "path": "./apps/host" },
-    { "path": "./apps/catalog" },
-    { "path": "./apps/profile" }
-  ]
+  "references": [{ "path": "./apps/host" }]
 }

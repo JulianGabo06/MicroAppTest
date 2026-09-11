@@ -1,16 +1,21 @@
-# MicroApps
+# MicroApps (host / base)
 
-Monorepo de **microfrontends móviles** con:
+Shell de **microfrontends móviles** con:
 
-- **Expo** (host + remotes alineados)
-- **Re.Pack** + **Module Federation** (mini apps en runtime)
-- **Floci** en Docker (S3 local para practicar DevOps)
+- **Expo** + **Re.Pack** + **Module Federation**
+- **Floci** en Docker (S3 local)
+- **Biome** (lint + format)
 
-La app principal muestra **2 botones**; cada uno carga una micro app distinta (`catalog` / `profile`).
+Las mini apps **no** viven en este repo. Están en repos hermanos:
+
+| Repo | Puerto | Federation |
+|------|--------|------------|
+| [microapp-catalog](https://github.com/JulianGabo06/microapp-catalog) | 9001 | `catalog` |
+| [microapp-profile](https://github.com/JulianGabo06/microapp-profile) | 9002 | `profile` |
 
 ```
-Host (:8081) ──► [Catálogo] → catalog (:9001)
-             └──► [Perfil]   → profile (:9002)
+Host (:8081) ──► [Catálogo] → microapp-catalog (:9001)
+             └──► [Perfil]   → microapp-profile (:9002)
                       │
                       ▼
               Floci S3 (:4566)
@@ -26,25 +31,42 @@ Host (:8081) ──► [Catálogo] → catalog (:9001)
 | npm | ≥ 10 |
 | Docker Desktop | para Floci |
 | Android Studio y/o Xcode | development build (no Expo Go) |
+| Repos hermanos | `microapp-catalog` y `microapp-profile` junto a esta carpeta |
 
 > Re.Pack **no** corre en Expo Go. Hay que generar nativo con `npm run prebuild`.
 
+Layout en disco:
+
+```text
+Proyectos/
+├── MicroApps/            ← este repo (host)
+├── microapp-catalog/
+└── microapp-profile/
+```
+
 ---
 
-## Clone y arranque (otra persona)
+## Clone y arranque
 
 ```bash
-git clone git@github.com:JulianGabo06/MicroAppTest.git
-cd MicroAppTest
-git checkout develop   # rama de trabajo
+# 1) Host
+git clone git@github.com:JulianGabo06/MicroAppTest.git MicroApps
+cd MicroApps
+git checkout develop
 
-# 1) deps + docker + bucket S3 (si Docker está disponible)
+# 2) Mini apps (hermanas, al mismo nivel)
+cd ..
+git clone git@github.com:JulianGabo06/microapp-catalog.git
+git clone git@github.com:JulianGabo06/microapp-profile.git
+cd MicroApps
+
+# 3) deps host + deps remotes + docker + bucket
 npm run setup
 
-# 2) generar android/ios del host + parches Re.Pack
+# 4) nativo del host
 npm run prebuild
 
-# 3) tres bundlers (host, catalog, profile)
+# 5) tres bundlers (host + 2 remotes)
 npm start
 ```
 
@@ -58,8 +80,6 @@ npm run ios
 
 ### Emulador Android
 
-Si las mini apps no cargan:
-
 ```bash
 adb reverse tcp:8081 tcp:8081
 adb reverse tcp:9001 tcp:9001
@@ -69,43 +89,40 @@ adb reverse tcp:9002 tcp:9002
 ### Qué deberías ver
 
 1. Home **MicroApps** con 2 botones  
-2. **Abrir Catálogo** → lista remota (`catalog`)  
-3. **Abrir Perfil** → pantalla remota (`profile`)  
-4. Si apagas el server `:9001` y abres Catálogo → falla el load (prueba de que es remoto)
+2. **Abrir Catálogo** → remote `catalog`  
+3. **Abrir Perfil** → remote `profile`  
+4. Si apagas `:9001` y abres Catálogo → falla el load (prueba de que es remoto)
 
 ---
 
-## Estructura
+## Estructura (host)
 
 ```text
 MicroApps/
 ├── apps/
-│   ├── host/                 # Shell Expo + Re.Pack (ÚNICO binario nativo)
-│   │   ├── plugins/          # withRepackEntry (prebuild)
-│   │   ├── rspack.config.mjs
-│   │   └── src/
-│   ├── catalog/              # Remote Expo+Re.Pack (solo JS, :9001)
-│   └── profile/              # Remote Expo+Re.Pack (solo JS, :9002)
-├── packages/shared/          # getSharedDependencies() para MF
+│   └── host/                 # ÚNICO binario nativo
+│       ├── plugins/
+│       ├── rspack.config.mjs # remotes → localhost:9001/9002
+│       └── src/
+├── packages/shared/          # getSharedDependencies() (contrato host)
 ├── scripts/
-│   ├── setup.js              # post-clone
-│   └── patch-native.js       # re-parche entry + Gradle SSL
-├── infra/scripts/            # S3 / floci-ui helpers
-├── docs/                     # Notas de estudio
+│   ├── setup.js              # host + instala remotes hermanos
+│   └── patch-native.js
+├── infra/scripts/
+├── docs/
+├── biome.json
 ├── docker-compose.yml
-├── package.json              # npm workspaces
+├── package.json
 └── README.md
 ```
 
-### Roles (importante)
+### Roles
 
-| App | Expo | Nativo (`android`/`ios`) | Rol |
-|-----|------|---------------------------|-----|
-| `host` | Sí | Sí (`expo prebuild`) | Shell: navegación + carga remotes |
-| `catalog` | Sí (`app.json` + deps + plugin) | **No** | Remote MF: solo bundle JS |
-| `profile` | Sí (`app.json` + deps + plugin) | **No** | Remote MF: solo bundle JS |
-
-Las mini apps **no** se abren con Expo Go ni con `expo run:*`. Viven dentro del host. Alinean versión de `expo` / `react` / `react-native` y usan `@callstack/repack-plugin-expo-modules`.
+| Pieza | Repo | Nativo | Rol |
+|-------|------|--------|-----|
+| host | este | Sí | Shell + carga remotes |
+| catalog | `microapp-catalog` | No | Remote MF JS |
+| profile | `microapp-profile` | No | Remote MF JS |
 
 ---
 
@@ -113,34 +130,36 @@ Las mini apps **no** se abren con Expo Go ni con `expo run:*`. Viven dentro del 
 
 | Comando | Descripción |
 |---------|-------------|
-| `npm run setup` | Install + Docker Floci + bucket |
-| `npm run prebuild` | `expo prebuild` + parches nativos Re.Pack |
+| `npm run setup` | Install host + remotes hermanos + Floci + bucket |
+| `npm run prebuild` | `expo prebuild` + parches Re.Pack |
 | `npm start` | Host + catalog + profile en paralelo |
-| `npm run android` / `ios` | Corre el host (`--no-bundler`; usa los servers de `npm start`) |
-| `npm run typecheck` | TypeScript en las 3 apps |
-| `npm run docker:up` | Solo Floci |
-| `npm run docker:ui` | Clona floci-ui (consola web) |
-| `npm run s3:create-bucket` | Crea `microapps-bundles` |
-| `npm run patch:native` | Reaplica nativo si regeneraste `android/`/`ios/` |
+| `npm run start:host` / `start:catalog` / `start:profile` | Uno solo |
+| `npm run android` / `ios` | Corre el host (`--no-bundler`) |
+| `npm run lint` / `lint:fix` / `format` | Biome |
+| `npm run typecheck` | TypeScript del host |
+| `npm run docker:up` | Floci |
+| `npm run s3:create-bucket` | Bucket `microapps-bundles` |
 
 ---
 
-## Piezas importantes (por si regeneras nativo)
+## Biome
 
-1. **Entry JS**  
-   Re.Pack sirve `index.bundle`. Expo por defecto pide `.expo/.virtual-metro-entry` → 404.  
-   El plugin `apps/host/plugins/withRepackEntry.js` + `scripts/patch-native.js` dejan `jsMainModulePath = "index"`.
+```bash
+npm run lint
+npm run lint:fix
+npm run format
+```
 
-2. **Module Federation `shared`**  
-   Solo `react` + `react-native` (singleton, eager en host).  
-   No compartir `@react-navigation/*` (provoca `RUNTIME-006`).
+Misma herramienta en host y en cada micro app (`biome.json` en cada repo).
 
-3. **SSL en Windows**  
-   - npm: `.npmrc` con `strict-ssl=false` (redes con antivirus/proxy)  
-   - Gradle: trust store `Windows-ROOT` (lo aplica el prebuild/parche)
+---
 
-4. **Workspaces**  
-   Todo se instala desde la **raíz** con `npm install`. No hace falta entrar a cada app.
+## Piezas importantes
+
+1. **Entry JS** — plugin `withRepackEntry` + `patch-native.js` → `jsMainModulePath = "index"`.
+2. **Shared MF** — solo `react` + `react-native`. Las mini apps copian el contrato en su `shared.js`.
+3. **SSL Windows** — `.npmrc` + Gradle `Windows-ROOT`.
+4. **Remotes** — URLs en `apps/host/rspack.config.mjs` (localhost en dev; S3/Floci en prod).
 
 ---
 
@@ -153,25 +172,17 @@ npm run s3:create-bucket
 npm run s3:upload-demo
 ```
 
-Consola visual opcional:
-
-```bash
-npm run docker:ui
-cd infra/floci-ui && docker compose up
-# http://localhost:4500
-```
-
 ---
 
 ## Notas de estudio
 
-- [`docs/04-guia-explicativa.md`](docs/04-guia-explicativa.md) — relato para explicar + fuentes  
-- [`docs/05-guia-tecnica-codigo.md`](docs/05-guia-tecnica-codigo.md) — **paso a paso técnico con código**  
-- [`docs/01-conceptos.md`](docs/01-conceptos.md) — problema y mapa mental  
-- [`docs/02-repack.md`](docs/02-repack.md) — Re.Pack / Module Federation  
-- [`docs/03-docker-floci.md`](docs/03-docker-floci.md) — S3 local con Floci  
-
-Este README es el contrato para clonar y correr.
+- [`docs/06-agregar-microapp-repo.md`](docs/06-agregar-microapp-repo.md) — agregar otra micro app  
+- [`docs/07-repos-separados-y-biome.md`](docs/07-repos-separados-y-biome.md) — layout multi-repo + Biome  
+- [`docs/04-guia-explicativa.md`](docs/04-guia-explicativa.md)  
+- [`docs/05-guia-tecnica-codigo.md`](docs/05-guia-tecnica-codigo.md)  
+- [`docs/01-conceptos.md`](docs/01-conceptos.md)  
+- [`docs/02-repack.md`](docs/02-repack.md)  
+- [`docs/03-docker-floci.md`](docs/03-docker-floci.md)  
 
 ---
 
@@ -179,6 +190,6 @@ Este README es el contrato para clonar y correr.
 
 - [Re.Pack](https://re-pack.dev/)
 - [Module Federation](https://module-federation.io/)
+- [Biome](https://biomejs.dev/)
 - [Callstack Super App Showcase](https://github.com/callstack/super-app-showcase)
 - [floci-ui](https://github.com/floci-io/floci-ui)
-- [Expo Modules + Re.Pack](https://re-pack.dev/docs/guides/expo-modules)
