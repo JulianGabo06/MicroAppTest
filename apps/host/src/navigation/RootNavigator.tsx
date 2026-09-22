@@ -20,11 +20,7 @@ export default function RootNavigator() {
         contentStyle: { backgroundColor: '#0F172A' },
       }}
     >
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'MicroApps Host' }}
-      />
+      <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'MicroApps Host' }} />
       <Stack.Screen name="Catalog" options={{ title: 'Catálogo' }}>
         {() => <RemoteScreen remote="catalog" title="Catálogo" />}
       </Stack.Screen>

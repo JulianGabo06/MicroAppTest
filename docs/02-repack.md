@@ -45,7 +45,7 @@ También está `ExpoModulesPlugin` para poder usar paquetes Expo.
 
 ### C) Mini apps: exponer pantallas
 
-`apps/catalog/rspack.config.mjs` (igual idea en profile):
+`../microapp-catalog/rspack.config.mjs` (igual idea en profile):
 
 ```js
 exposes: {

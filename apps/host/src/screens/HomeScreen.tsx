@@ -1,10 +1,5 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import type { RootStackParamList } from '../navigation/RootNavigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
@@ -17,11 +12,10 @@ export default function HomeScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.brand}>MicroApps</Text>
-      <Text style={styles.subtitle}>
-        Host con Re.Pack. Cada botón carga una mini app remota.
-      </Text>
+      <Text style={styles.subtitle}>Host con Re.Pack. Cada botón carga una mini app remota.</Text>
 
       <Pressable
+        accessibilityRole="button"
         style={({ pressed }) => [styles.button, styles.catalog, pressed && styles.pressed]}
         onPress={() => navigation.navigate('Catalog')}
       >
@@ -30,6 +24,7 @@ export default function HomeScreen({ navigation }: Props) {
       </Pressable>
 
       <Pressable
+        accessibilityRole="button"
         style={({ pressed }) => [styles.button, styles.profile, pressed && styles.pressed]}
         onPress={() => navigation.navigate('Profile')}
       >

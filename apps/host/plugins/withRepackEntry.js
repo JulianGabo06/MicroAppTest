@@ -4,8 +4,8 @@ const {
   withDangerousMod,
   createRunOncePlugin,
 } = require('expo/config-plugins');
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 /**
  * Re.Pack sirve el bundle como `index.bundle`.
@@ -13,7 +13,10 @@ const path = require('path');
  * Este plugin fija jsMainModulePath / bundle root a `index` tras `expo prebuild`.
  */
 function ensureAndroidJsEntry(contents) {
-  if (contents.includes('jsMainModulePath = "index"') || contents.includes("jsMainModulePath = 'index'")) {
+  if (
+    contents.includes('jsMainModulePath = "index"') ||
+    contents.includes("jsMainModulePath = 'index'")
+  ) {
     return contents;
   }
 
@@ -74,10 +77,7 @@ function withRepackEntry(config) {
   config = withDangerousMod(config, [
     'android',
     async (cfg) => {
-      const gradlePropsPath = path.join(
-        cfg.modRequest.platformProjectRoot,
-        'gradle.properties',
-      );
+      const gradlePropsPath = path.join(cfg.modRequest.platformProjectRoot, 'gradle.properties');
       if (fs.existsSync(gradlePropsPath)) {
         const current = fs.readFileSync(gradlePropsPath, 'utf8');
         fs.writeFileSync(gradlePropsPath, ensureGradleWindowsSsl(current));
@@ -89,8 +89,4 @@ function withRepackEntry(config) {
   return config;
 }
 
-module.exports = createRunOncePlugin(
-  withRepackEntry,
-  'with-repack-entry',
-  '1.0.0',
-);
+module.exports = createRunOncePlugin(withRepackEntry, 'with-repack-entry', '1.0.0');

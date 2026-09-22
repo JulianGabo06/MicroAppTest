@@ -34,3 +34,9 @@ infra/data/*
 # Local agent settings
 .claude/
 **/.claude/
+
+# Tests
+coverage/
+
+# Turborepo
+.turbo/

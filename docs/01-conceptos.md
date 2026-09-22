@@ -15,20 +15,21 @@ Con **micro apps** (microfrontends móviles):
 
 | Término | En este repo |
 |---------|----------------|
-| Host / Shell | `apps/host` |
-| Remote / Mini app | `apps/catalog`, `apps/profile` |
+| Host / Shell | `apps/host` (este repo) |
+| Remote / Mini app | repos hermanos `microapp-catalog`, `microapp-profile` |
 | Bundler | **Re.Pack** (Rspack), no Metro |
 | Runtime linking | **Module Federation v2** |
 | Almacén de bundles | **Floci** (S3 local en Docker) |
 | Consola cloud | **floci-ui** (opcional) |
+| Lint / format | **Biome** (host + cada micro app) |
 
 ## Flujo en desarrollo
 
 ```text
-1. npm start
-   ├─ host    escucha :8081  (bundle del shell)
-   ├─ catalog escucha :9001  (mf-manifest.json + container)
-   └─ profile escucha :9002
+1. npm start  (desde MicroApps; levanta host + remotes hermanos)
+   ├─ host               escucha :8081
+   ├─ microapp-catalog   escucha :9001  (mf-manifest.json + container)
+   └─ microapp-profile   escucha :9002
 
 2. Usuario toca "Abrir Catálogo"
 3. Host hace import('catalog/App')
@@ -47,6 +48,9 @@ Con **micro apps** (microfrontends móviles):
 ```
 
 En este starter el paso 3 aún apunta a **localhost** (más simple). El Docker + scripts S3 ya están listos para practicar el upload.
+
+Para sumar otra mini app desde un **repositorio externo**: ver [`06-agregar-microapp-repo.md`](./06-agregar-microapp-repo.md).  
+Layout multi-repo + Biome: [`07-repos-separados-y-biome.md`](./07-repos-separados-y-biome.md).
 
 ## Expo vs Re.Pack (importante)
 
