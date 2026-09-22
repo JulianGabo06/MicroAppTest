@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
     "skipLibCheck": true,
-    "types": ["react", "react-native"],
+    "types": ["react", "react-native", "jest"],
     "composite": true
   },
   "include": ["**/*.ts", "**/*.tsx", "mf-modules.d.ts"],

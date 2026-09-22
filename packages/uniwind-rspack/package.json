@@ -1,0 +1,16 @@
+{
+  "name": "@microapps/uniwind-rspack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Integración de Uniwind con Re.Pack/Rspack (Uniwind solo trae adaptadores para Metro y Vite).",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./loader": "./src/loader.js"
+  },
+  "peerDependencies": {
+    "metro-transform-worker": "*",
+    "tailwindcss": ">=4",
+    "uniwind": "^1.12.0"
+  }
+}

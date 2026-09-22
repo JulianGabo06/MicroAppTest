@@ -15,7 +15,8 @@
       "!**/android",
       "!**/ios",
       "!**/infra/floci-ui",
-      "!**/*.tsbuildinfo"
+      "!**/*.tsbuildinfo",
+      "!**/uniwind-types.d.ts"
     ]
   },
   "formatter": {

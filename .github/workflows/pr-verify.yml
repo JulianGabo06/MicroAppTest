@@ -1,0 +1,51 @@
+name: PR verify
+
+# Verifica cada pull request del host: typecheck, tests (Jest) y lint (Biome).
+# Las micro apps (microapp-catalog / microapp-profile) tienen su propio pipeline.
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: pr-verify-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Typecheck + tests + lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Turbo cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: turbo-${{ runner.os }}-
+
+      - name: Typecheck
+        run: npx turbo run typecheck
+
+      - name: Tests (Jest)
+        run: npx turbo run test
+
+      - name: Lint (Biome)
+        run: npx biome ci .

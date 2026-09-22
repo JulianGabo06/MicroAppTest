@@ -5,6 +5,10 @@ Shell de **microfrontends móviles** con:
 - **Expo** + **Re.Pack** + **Module Federation**
 - **Floci** en Docker (S3 local)
 - **Biome** (lint + format)
+- **Uniwind** (Tailwind v4, `className` en componentes RN)
+- **Changesets** (versionado y changelog)
+- **Turborepo** (orquestación y caché de tareas) + **GitHub Actions** (verificación de PRs)
+- **Rozenite** (paneles extra en React Native DevTools)
 
 Las mini apps **no** viven en este repo. Están en repos hermanos:
 
@@ -27,7 +31,7 @@ Host (:8081) ──► [Catálogo] → microapp-catalog (:9001)
 
 | Herramienta | Versión |
 |-------------|---------|
-| Node.js | ≥ 20 (ver `.nvmrc`) |
+| Node.js | 24 (ver `.nvmrc`; mínimo 22.13) |
 | npm | ≥ 10 |
 | Docker Desktop | para Floci |
 | Android Studio y/o Xcode | development build (no Expo Go) |
@@ -101,12 +105,18 @@ adb reverse tcp:9002 tcp:9002
 MicroApps/
 ├── apps/
 │   └── host/                 # ÚNICO binario nativo
+│       ├── devtools/         # no-op de Rozenite para producción
 │       ├── plugins/
 │       ├── rspack.config.mjs # remotes → localhost:9001/9002
 │       └── src/
 ├── packages/shared/          # getSharedDependencies() (contrato host)
+├── packages/uniwind-rspack/  # Uniwind para Re.Pack (host + remotes)
+├── .github/workflows/        # pr-verify.yml (typecheck + tests + lint en cada PR)
+├── turbo.json
+├── .changeset/
 ├── scripts/
 │   ├── setup.js              # host + instala remotes hermanos
+│   ├── typecheck.js          # tsc filtrado (sin node_modules)
 │   └── patch-native.js
 ├── infra/scripts/
 ├── docs/
@@ -136,7 +146,10 @@ MicroApps/
 | `npm run start:host` / `start:catalog` / `start:profile` | Uno solo |
 | `npm run android` / `ios` | Corre el host (`--no-bundler`) |
 | `npm run lint` / `lint:fix` / `format` | Biome |
-| `npm run typecheck` | TypeScript del host |
+| `npm run typecheck` / `typecheck:all` | TypeScript del host / host + remotes |
+| `npm test` / `test:all` / `test:coverage` | Tests (Jest + RNTL) del host / host + remotes / cobertura |
+| `npm run verify` | Lo mismo que el pipeline de PR: typecheck + tests + Biome |
+| `npm run changeset` / `changeset:status` / `changeset:version` | Changesets |
 | `npm run docker:up` | Floci |
 | `npm run s3:create-bucket` | Bucket `microapps-bundles` |
 
@@ -159,7 +172,8 @@ Misma herramienta en host y en cada micro app (`biome.json` en cada repo).
 1. **Entry JS** — plugin `withRepackEntry` + `patch-native.js` → `jsMainModulePath = "index"`.
 2. **Shared MF** — solo `react` + `react-native`. Las mini apps copian el contrato en su `shared.js`.
 3. **SSL Windows** — `.npmrc` + Gradle `Windows-ROOT`.
-4. **Remotes** — URLs en `apps/host/rspack.config.mjs` (localhost en dev; S3/Floci en prod).
+4. **Uniwind** — `UniwindRspackPlugin` + `global.css` en cada app; `uniwind` no va en shared (ver docs/08).
+5. **Remotes** — URLs en `apps/host/rspack.config.mjs` (localhost en dev; S3/Floci en prod).
 
 ---
 
@@ -176,6 +190,11 @@ npm run s3:upload-demo
 
 ## Notas de estudio
 
+- [`docs/00-manual-de-usuario.md`](docs/00-manual-de-usuario.md) — **Manual de usuario**: estructura, arranque y día a día  
+- [`docs/11-guia-de-cambios.md`](docs/11-guia-de-cambios.md) — Guía de los cambios (Uniwind, tests, CI, Turbo, Rozenite)  
+- [`docs/10-ci-turbo-rozenite.md`](docs/10-ci-turbo-rozenite.md) — Pipeline de PR, Turborepo y Rozenite  
+- [`docs/09-tests.md`](docs/09-tests.md) — Tests con Jest + React Native Testing Library  
+- [`docs/08-uniwind-typecheck-changesets.md`](docs/08-uniwind-typecheck-changesets.md) — Uniwind, typecheck y Changesets  
 - [`docs/06-agregar-microapp-repo.md`](docs/06-agregar-microapp-repo.md) — agregar otra micro app  
 - [`docs/07-repos-separados-y-biome.md`](docs/07-repos-separados-y-biome.md) — layout multi-repo + Biome  
 - [`docs/04-guia-explicativa.md`](docs/04-guia-explicativa.md)  
