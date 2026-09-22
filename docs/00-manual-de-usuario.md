@@ -233,6 +233,16 @@ Con `npm start` corriendo, pulsa `j` en la terminal del host (o *Open DevTools* 
 desarrollo). Pestañas extra: **React Navigation** (timeline y estado) y **Network Activity**
 (peticiones, incluidos los `mf-manifest.json` de los remotes).
 
+### Instalar la app en un teléfono (APK)
+
+```bash
+npm run android:release   # → dist/microapps-host-release.apk
+npm run remotes:build     # bundles de producción de las micro apps
+npm run remotes:serve     # servirlos por la Wi-Fi mientras usas la app
+```
+
+Detalle: [12-build-android.md](12-build-android.md).
+
 ### Agregar una micro app nueva
 
 Seguir [06-agregar-microapp-repo.md](06-agregar-microapp-repo.md). Además de lo que describe:
@@ -270,3 +280,4 @@ Seguir [06-agregar-microapp-repo.md](06-agregar-microapp-repo.md). Además de lo
 | [09-tests.md](09-tests.md) | Tests |
 | [10-ci-turbo-rozenite.md](10-ci-turbo-rozenite.md) | CI, Turborepo, Rozenite |
 | [11-guia-de-cambios.md](11-guia-de-cambios.md) | Qué cambió en esta tanda y por qué |
+| [12-build-android.md](12-build-android.md) | APK release para un teléfono físico |

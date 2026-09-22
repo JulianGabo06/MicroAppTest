@@ -1,6 +1,8 @@
 const {
   withMainApplication,
   withAppDelegate,
+  withAppBuildGradle,
+  withAndroidManifest,
   withDangerousMod,
   createRunOncePlugin,
 } = require('expo/config-plugins');
@@ -63,7 +65,36 @@ function ensureGradleWindowsSsl(contents) {
   return `${sslBlock}\n${contents}`;
 }
 
-function withRepackEntry(config) {
+/**
+ * Expo empaqueta el release con `@expo/cli export:embed` (Metro). Con Re.Pack hay que usar
+ * el CLI de React Native: su comando `bundle` lo reemplaza Re.Pack (react-native.config.js).
+ */
+function ensureRepackReleaseBundle(contents) {
+  return contents
+    .replace(
+      /cliFile = new File\(\["node", "--print", "require\.resolve\('@expo\/cli'[^\n]*\n/,
+      `cliFile = new File(["node", "--print", "require.resolve('react-native/cli.js')"].execute(null, rootDir).text.trim())\n`,
+    )
+    .replace('bundleCommand = "export:embed"', 'bundleCommand = "bundle"');
+}
+
+function withRepackEntry(config, { allowCleartextTraffic = false } = {}) {
+  config = withAppBuildGradle(config, (cfg) => {
+    cfg.modResults.contents = ensureRepackReleaseBundle(cfg.modResults.contents);
+    return cfg;
+  });
+
+  // Los remotes se sirven por HTTP (dev / red local). Android bloquea HTTP en claro en release.
+  if (allowCleartextTraffic) {
+    config = withAndroidManifest(config, (cfg) => {
+      const application = cfg.modResults.manifest.application?.[0];
+      if (application) {
+        application.$['android:usesCleartextTraffic'] = 'true';
+      }
+      return cfg;
+    });
+  }
+
   config = withMainApplication(config, (cfg) => {
     cfg.modResults.contents = ensureAndroidJsEntry(cfg.modResults.contents);
     return cfg;

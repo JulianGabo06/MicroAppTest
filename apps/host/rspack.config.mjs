@@ -10,6 +10,10 @@ const { getSharedDependencies } = require('@microapps/shared');
 const { UniwindRspackPlugin } = require('@microapps/uniwind-rspack');
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Dónde busca el host a los remotes. En un teléfono físico por Wi-Fi: la IP del PC
+// (p. ej. MF_REMOTES_HOST=192.168.1.10 al compilar el release). Ver docs/12-build-android.md.
+const REMOTES_HOST = process.env.MF_REMOTES_HOST ?? 'localhost';
+
 const ROZENITE_PLUGINS = ['@rozenite/network-activity-plugin', '@rozenite/react-navigation-plugin'];
 const ROZENITE_NOOP = path.join(__dirname, 'devtools/rozenite-noop.js');
 
@@ -67,8 +71,8 @@ export default withRozenite(
           filename: 'host.container.js.bundle',
           dts: false,
           remotes: {
-            catalog: `catalog@http://localhost:9001/${platform}/mf-manifest.json`,
-            profile: `profile@http://localhost:9002/${platform}/mf-manifest.json`,
+            catalog: `catalog@http://${REMOTES_HOST}:9001/${platform}/mf-manifest.json`,
+            profile: `profile@http://${REMOTES_HOST}:9002/${platform}/mf-manifest.json`,
           },
           shared: getSharedDependencies(true),
         }),

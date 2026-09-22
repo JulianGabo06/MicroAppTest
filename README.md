@@ -192,6 +192,7 @@ npm run s3:upload-demo
 
 - [`docs/00-manual-de-usuario.md`](docs/00-manual-de-usuario.md) — **Manual de usuario**: estructura, arranque y día a día  
 - [`docs/11-guia-de-cambios.md`](docs/11-guia-de-cambios.md) — Guía de los cambios (Uniwind, tests, CI, Turbo, Rozenite)  
+- [`docs/12-build-android.md`](docs/12-build-android.md) — APK release para instalar en un teléfono  
 - [`docs/10-ci-turbo-rozenite.md`](docs/10-ci-turbo-rozenite.md) — Pipeline de PR, Turborepo y Rozenite  
 - [`docs/09-tests.md`](docs/09-tests.md) — Tests con Jest + React Native Testing Library  
 - [`docs/08-uniwind-typecheck-changesets.md`](docs/08-uniwind-typecheck-changesets.md) — Uniwind, typecheck y Changesets  

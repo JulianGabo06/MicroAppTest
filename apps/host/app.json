@@ -22,7 +22,14 @@
       },
       "package": "com.microapps.host"
     },
-    "plugins": ["./plugins/withRepackEntry.js"],
+    "plugins": [
+      [
+        "./plugins/withRepackEntry.js",
+        {
+          "allowCleartextTraffic": true
+        }
+      ]
+    ],
     "extra": {
       "role": "host",
       "federationName": "host",
